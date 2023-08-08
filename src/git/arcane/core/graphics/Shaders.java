@@ -1,15 +1,19 @@
 package git.arcane.core.graphics;
 
 import git.arcane.core.util.Log;
+import org.joml.Matrix4f;
+import org.lwjgl.system.MemoryStack;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.system.MemoryStack.stackPush;
 
 public class Shaders {
     private static class ShaderData {
@@ -75,6 +79,14 @@ public class Shaders {
 
     public void setUniform3f(String name, float val1, float val2, float val3) {
         glUniform3f(getUniformLocation(name), val1, val2, val3);
+    }
+
+    public void setUniformMat4(String name, Matrix4f value) {
+        try(MemoryStack stack = stackPush()) {
+            FloatBuffer buffer = stack.mallocFloat(16);
+            value.get(buffer);
+            glUniformMatrix4fv(getUniformLocation(name), false, buffer);
+        }
     }
 
     public int createUniform(String name) {

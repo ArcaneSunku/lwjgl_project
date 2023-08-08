@@ -75,7 +75,7 @@ public class Texture {
             m_Data.Channels = channels.get(0);
         }
 
-        m_Data.RenderID = glGenTextures();
+        m_Data.RenderID = glCreateTextures(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, m_Data.RenderID);
 
         if(m_Data.Channels == 3) {

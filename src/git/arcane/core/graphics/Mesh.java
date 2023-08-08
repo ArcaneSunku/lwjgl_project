@@ -1,6 +1,7 @@
 package git.arcane.core.graphics;
 
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -51,12 +52,14 @@ public class Mesh {
     }
 
     private void load() {
-        try (MemoryStack stack = stackPush()) {
+        FloatBuffer vertexBuffer = null;
+        IntBuffer indexBuffer = null;
+        try {
             m_Data.VAO = glCreateVertexArrays();
             glBindVertexArray(m_Data.VAO);
 
             m_Data.VBO = glCreateBuffers();
-            FloatBuffer vertexBuffer = stack.mallocFloat(m_Data.Vertices.length);
+            vertexBuffer = MemoryUtil.memAllocFloat(m_Data.Vertices.length);
             vertexBuffer.put(0, m_Data.Vertices);
 
             glBindBuffer(GL_ARRAY_BUFFER, m_Data.VBO);
@@ -72,13 +75,19 @@ public class Mesh {
             glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * Float.BYTES, 6 * Float.BYTES);
 
             m_Data.EBO = glCreateBuffers();
-            IntBuffer indexBuffer = stack.mallocInt(m_Data.Indices.length);
+            indexBuffer = MemoryUtil.memAllocInt(m_Data.Indices.length);
             indexBuffer.put(0, m_Data.Indices);
 
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Data.EBO);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL_STATIC_DRAW);
 
             glBindVertexArray(0);
+        } finally {
+            if(vertexBuffer != null)
+                MemoryUtil.memFree(vertexBuffer);
+
+            if(indexBuffer != null)
+                MemoryUtil.memFree(indexBuffer);
         }
     }
 
