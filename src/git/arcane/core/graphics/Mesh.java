@@ -1,6 +1,7 @@
 package git.arcane.core.graphics;
 
-import org.lwjgl.system.MemoryStack;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.FloatBuffer;
@@ -15,7 +16,6 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 import static org.lwjgl.opengl.GL45.glCreateBuffers;
 import static org.lwjgl.opengl.GL45.glCreateVertexArrays;
-import static org.lwjgl.system.MemoryStack.stackPush;
 
 public class Mesh {
 
@@ -41,6 +41,9 @@ public class Mesh {
         glDeleteVertexArrays(m_Data.VAO);
         glDeleteBuffers(m_Data.VBO);
         glDeleteBuffers(m_Data.EBO);
+
+        m_Data.Vertices = null;
+        m_Data.Indices = null;
     }
 
     public int getVAO() {
@@ -89,6 +92,26 @@ public class Mesh {
             if(indexBuffer != null)
                 MemoryUtil.memFree(indexBuffer);
         }
+    }
+
+    public static Mesh CreateMesh() {
+        return CreateMesh(new Vector3f(1.0f));
+    }
+
+    public static Mesh CreateMesh(Vector3f color) {
+        float[] vertices = { // x, y, z, r, g, b, u, v
+                -1.0f, -1.0f, 0.0f, color.x, color.y, color.z, 0.0f, 1.0f, // Bottom Left
+                -1.0f,  1.0f, 0.0f, color.x, color.y, color.z, 0.0f, 0.0f, // Top Left
+                 1.0f,  1.0f, 0.0f, color.x, color.y, color.z, 1.0f, 0.0f, // Top Right
+                 1.0f, -1.0f, 0.0f, color.x, color.y, color.z, 1.0f, 1.0f, // Bottom Right
+        };
+
+        int[] indices = {
+                0, 1, 2,
+                3, 0, 2
+        };
+
+        return new Mesh(vertices, indices);
     }
 
 }

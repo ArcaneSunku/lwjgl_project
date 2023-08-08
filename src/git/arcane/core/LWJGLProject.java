@@ -2,9 +2,14 @@ package git.arcane.core;
 
 import git.arcane.core.util.Log;
 import git.arcane.core.graphics.Window;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.PointerBuffer;
+import org.lwjgl.glfw.GLFWErrorCallback;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GLDebugMessageCallback.getMessage;
+import static org.lwjgl.system.MemoryUtil.memByteBuffer;
 
 public class LWJGLProject implements Runnable {
 
@@ -59,6 +64,7 @@ public class LWJGLProject implements Runnable {
 
         double delta, accumulator = 0.0;
         double lastTime = glfwGetTime();
+        boolean shouldRender = false;
 
         final double TARGET_UPS = 1.0 / 30.0, TARGET_FPS = 1.0 / 75.0;
         while(m_Running) {
@@ -74,18 +80,25 @@ public class LWJGLProject implements Runnable {
             while(accumulator >= TARGET_UPS) {
                 m_Game.update(delta);
                 accumulator -= delta;
+                shouldRender = true;
             }
 
-            double alpha = accumulator / TARGET_FPS;
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            if(shouldRender) {
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            m_Game.render(alpha);
+                double alpha = accumulator / TARGET_FPS;
+                m_Game.render(alpha);
+                shouldRender = false;
+            }
+
             m_Window.update();
         }
     }
 
     @Override
     public void run() {
+        GLFWErrorCallback.create((error, description) -> Log.RENDER.error("OpenGL Error Occurred[{}]:\n{}", error, GLFWErrorCallback.getDescription(description))).set();
+
         if(!glfwInit()) {
             Log.CORE.error("Failed to initialize GLFW! Are you drivers up to date?");
             System.exit(-1);
