@@ -1,11 +1,10 @@
-package git.arcane.core;
+package git.arcane.core.graphics.rendering;
 
 import git.arcane.core.graphics.Mesh;
 import git.arcane.core.graphics.Shaders;
 import git.arcane.core.graphics.Texture;
 import git.arcane.core.graphics.cameras.Camera;
 import org.joml.Matrix4f;
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -24,6 +23,10 @@ public class Renderer {
         m_Shader.createUniform("u_MVPmatrix");
         m_Shader.createUniform("u_Sampler");
         m_Shader.createUniform("u_Textured");
+    }
+
+    public void dispose() {
+        m_Shader.dispose();
     }
 
     public void renderMesh(Camera camera, Mesh mesh) {
@@ -55,10 +58,6 @@ public class Renderer {
         glBindVertexArray(mesh.getVAO());
         glDrawElements(GL_TRIANGLES, mesh.getVertexCount(), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
-    }
-
-    public void dispose() {
-        m_Shader.dispose();
     }
 
 }

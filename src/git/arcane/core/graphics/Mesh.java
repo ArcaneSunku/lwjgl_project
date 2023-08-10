@@ -99,6 +99,8 @@ public class Mesh {
     }
 
     public static Mesh CreateMesh(Vector3f color) {
+
+
         float[] vertices = { // x, y, z, r, g, b, u, v
                 -1.0f, -1.0f, 0.0f, color.x, color.y, color.z, 0.0f, 1.0f, // Bottom Left
                 -1.0f,  1.0f, 0.0f, color.x, color.y, color.z, 0.0f, 0.0f, // Top Left

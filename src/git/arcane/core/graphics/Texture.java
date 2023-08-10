@@ -47,6 +47,14 @@ public class Texture {
         stbi_image_free(m_Data.ImageData);
     }
 
+    public int getWidth() {
+        return m_Data.Width;
+    }
+
+    public int getHeight() {
+        return m_Data.Height;
+    }
+
     private void load() {
         String path = m_Data.FilePath;
 
