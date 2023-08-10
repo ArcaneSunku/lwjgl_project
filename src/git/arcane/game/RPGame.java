@@ -1,11 +1,13 @@
 package git.arcane.game;
 
 import git.arcane.core.IGame;
+import git.arcane.core.Renderer;
 import git.arcane.core.graphics.Mesh;
 import git.arcane.core.graphics.Texture;
 import git.arcane.core.graphics.cameras.OrthoCamera;
 import git.arcane.core.util.Log;
 import git.arcane.core.graphics.Shaders;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryStack;
 
@@ -24,7 +26,8 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 public class RPGame implements IGame {
     private static final String GAME_NAME = "RPG Project";
 
-    private Shaders sceneShaders;
+    private Renderer render;
+
     private OrthoCamera camera;
     private Texture texture;
     private Mesh mesh;
@@ -34,25 +37,21 @@ public class RPGame implements IGame {
         Log.GAME.info("Initializing!");
         glEnable(GL_DEPTH_TEST);
 
+        final Shaders shaders = new Shaders("/shaders/scene.vert", "/shaders/scene.frag");
+        render = new Renderer(shaders);
+
         camera = new OrthoCamera(16, 10);
+        camera.setMoveSpeed(0.5f);
 
         mesh = Mesh.CreateMesh();
         texture = new Texture("/textures/dirt.png");
-        sceneShaders = new Shaders("/shaders/scene.vert", "/shaders/scene.frag");
-
-        sceneShaders.createUniform("u_PVMatrix");
-        sceneShaders.createUniform("u_Sampler");
-        sceneShaders.createUniform("u_Textured");
     }
 
     @Override
     public void dispose() {
         Log.GAME.info("Disposing!");
 
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glBindVertexArray(0);
-
-        sceneShaders.dispose();
+        render.dispose();
         texture.dispose();
         mesh.dispose();
     }
@@ -60,20 +59,26 @@ public class RPGame implements IGame {
     @Override
     public void update(double dt) {
         camera.update();
+
+        Vector2f position = camera.getPosition();
+        position.x -= (float) dt * camera.getMoveSpeed();
+
+        camera.setPosition(position);
     }
 
     @Override
     public void render(double alpha) {
-        sceneShaders.bind();
+        render.renderMesh(new Vector3f(-2.0f, 2.0f, 0f), 1.0f, camera, mesh, texture);
+        render.renderMesh(new Vector3f(0f, 2.0f, 0f), 1.0f, camera, mesh, texture);
+        render.renderMesh(new Vector3f(2.0f, 2.0f, 0f), 1.0f, camera, mesh, texture);
 
-        sceneShaders.setUniform1i("u_Sampler", 0);
-        sceneShaders.setUniformBool("u_Textured", true);
-        texture.bind(0);
+        render.renderMesh(new Vector3f(-2.0f, 0.0f, 0.0f), 1.0f, camera, mesh, texture);
+        render.renderMesh(new Vector3f(0f), 1.0f, camera, mesh, texture);
+        render.renderMesh(new Vector3f(2.0f, 0.0f, 0.0f), 1.0f, camera, mesh, texture);
 
-        sceneShaders.setUniformMat4("u_PVMatrix", camera.getCombinedMatrix());
-
-        glBindVertexArray(mesh.getVAO());
-        glDrawElements(GL_TRIANGLES, mesh.getVertexCount(), GL_UNSIGNED_INT, 0);
+        render.renderMesh(new Vector3f(-2.0f, -2.0f, 0f), 1.0f, camera, mesh, texture);
+        render.renderMesh(new Vector3f(0f, -2.0f, 0f), 1.0f, camera, mesh, texture);
+        render.renderMesh(new Vector3f(2.0f, -2.0f, 0f), 1.0f, camera, mesh, texture);
     }
 
     public String getGameName() {

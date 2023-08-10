@@ -8,7 +8,7 @@ public abstract class Camera {
         public Matrix4f View = new Matrix4f();
         public Matrix4f Projection = new Matrix4f();
 
-        public float MoveSpeed = 1.5f;
+        public float MoveSpeed = 2.5f;
     }
 
     protected final CameraData m_Data;
@@ -19,6 +19,10 @@ public abstract class Camera {
 
     public abstract void update();
     public abstract void resize(int width, int height);
+
+    public void setMoveSpeed(float moveSpeed) {
+        m_Data.MoveSpeed = moveSpeed;
+    }
 
     public float getMoveSpeed() {
         return m_Data.MoveSpeed;

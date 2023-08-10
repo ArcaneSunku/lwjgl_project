@@ -78,7 +78,7 @@ public class LWJGLProject implements Runnable {
 
             accumulator += delta;
             while(accumulator >= TARGET_UPS) {
-                m_Game.update(delta);
+                m_Game.update(accumulator);
                 accumulator -= delta;
                 shouldRender = true;
             }

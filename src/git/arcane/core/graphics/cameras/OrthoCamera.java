@@ -2,6 +2,7 @@ package git.arcane.core.graphics.cameras;
 
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 public class OrthoCamera extends Camera {
 
@@ -24,9 +25,9 @@ public class OrthoCamera extends Camera {
 
     @Override
     public void update() {
-        m_Data.View.identity();
-        m_Data.View.translation(-m_Position.x, -m_Position.y, 0.0f)
-                .scaling(1.0f);
+        m_Data.View = new Matrix4f();
+        m_Data.View.translate(-m_Position.x, -m_Position.y, 0.0f)
+                .scale(1.0f);
 
         m_Data.Combined = new Matrix4f();
         m_Data.Combined.set(m_Data.Projection).mul(m_Data.View);
@@ -37,9 +38,17 @@ public class OrthoCamera extends Camera {
         m_Dimension.set(width, height);
         m_AspectRatio = m_Dimension.x / m_Dimension.y;
 
-        m_Data.Projection.identity();
-        m_Data.Projection.setOrtho(-m_Dimension.x / m_AspectRatio, m_Dimension.x / m_AspectRatio, -m_Dimension.y / m_AspectRatio, m_Dimension.y / m_AspectRatio, -1.0f, 1.0f);
+        m_Data.Projection = new Matrix4f();
+        m_Data.Projection.ortho(-m_Dimension.x / m_AspectRatio, m_Dimension.x / m_AspectRatio, -m_Dimension.y / m_AspectRatio, m_Dimension.y / m_AspectRatio, -1.0f, 1.0f);
         update();
+    }
+
+    public void setPosition(Vector2f position) {
+        m_Position.set(position);
+    }
+
+    public void setDimension(Vector2f dimension) {
+        m_Dimension.set(dimension);
     }
 
     public float getAspectRatio() {
