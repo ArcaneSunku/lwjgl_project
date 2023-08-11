@@ -8,14 +8,24 @@ import org.joml.Vector3f;
 
 public class Sprite {
 
-    private Mesh m_Mesh;
-    private Vector3f m_Tint;
-    private Texture m_Texture;
+    private static class SpriteData {
+        public Mesh Mesh;
+        public Vector3f Tint;
+        public Texture Texture;
+    }
+
+    private final SpriteData m_Data;
+    private final Vector3f m_Position;
+    private final Vector2f m_Size;
 
     public Sprite(Texture texture, Vector3f tint, int x, int y, int width, int height) {
-        m_Mesh = CreateSpriteMesh(texture, tint, x, y, width, height);
-        m_Tint = tint;
-        m_Texture = texture;
+        m_Data = new SpriteData();
+        m_Position = new Vector3f(0.0f);
+        m_Size = new Vector2f(1.0f);
+
+        m_Data.Mesh = CreateSpriteMesh(texture, tint, x, y, width, height);
+        m_Data.Tint = tint;
+        m_Data.Texture = texture;
     }
 
     public Sprite(Texture texture, int x, int y, int width, int height) {
@@ -30,32 +40,48 @@ public class Sprite {
         this(texture, new Vector3f(1.0f));
     }
 
-    public void render(Vector3f position, float scale, OrthoCamera camera, Renderer render) {
-        render.renderMesh(position, scale, camera, m_Mesh, m_Texture);
+    public void render(OrthoCamera camera, Renderer render) {
+        render.renderMesh(m_Position, m_Size, camera, m_Data.Mesh, m_Data.Texture);
     }
 
-    public void render(Vector3f position, OrthoCamera camera, Renderer render) {
-        render(position, 1.0f, camera, render);
+    public void dispose() {
+        m_Data.Mesh.dispose();
+    }
+
+    public void setPosition(float x, float y) {
+        m_Position.set(x, y, m_Position.z);
+    }
+
+    public void setSize(float xSize, float ySize) {
+        m_Size.set(xSize, ySize);
     }
 
     public void setTint(Vector3f color) {
-        m_Tint = new Vector3f(color);
+        m_Data.Tint.set(color);
     }
 
     public void setTexture(Texture texture) {
-        m_Texture = texture;
+        m_Data.Texture = texture;
     }
 
     public void setSubImage(int x, int y, int width, int height) {
-        m_Mesh = CreateSpriteMesh(m_Texture, m_Tint, x, y, width, height);
+        m_Data.Mesh = CreateSpriteMesh(m_Data.Texture, m_Data.Tint, x, y, width, height);
+    }
+
+    public Vector3f getPosition() {
+        return m_Position;
+    }
+
+    public Vector2f getSize() {
+        return m_Size;
     }
 
     public Vector3f getTint() {
-        return m_Tint;
+        return m_Data.Tint;
     }
 
     public Texture getTexture() {
-        return m_Texture;
+        return m_Data.Texture;
     }
 
     private static Mesh CreateSpriteMesh(Texture texture, Vector3f color, float x, float y, float width, float height) {

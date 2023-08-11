@@ -5,6 +5,7 @@ import git.arcane.core.graphics.Shaders;
 import git.arcane.core.graphics.Texture;
 import git.arcane.core.graphics.cameras.Camera;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -30,21 +31,21 @@ public class Renderer {
     }
 
     public void renderMesh(Camera camera, Mesh mesh) {
-        renderMesh(new Vector3f(0.0f), 1.0f, camera, mesh);
+        renderMesh(new Vector3f(0.0f), new Vector2f(1.0f), camera, mesh);
     }
 
     public void renderMesh(Camera camera, Mesh mesh, Texture texture) {
-        renderMesh(new Vector3f(0.0f), 1.0f, camera, mesh, texture);
+        renderMesh(new Vector3f(0.0f), new Vector2f(1.0f), camera, mesh, texture);
     }
 
-    public void renderMesh(Vector3f position, float scale, Camera camera, Mesh mesh) {
+    public void renderMesh(Vector3f position, Vector2f scale, Camera camera, Mesh mesh) {
         renderMesh(position, scale, camera, mesh, null);
     }
 
-    public void renderMesh(Vector3f position, float scale, Camera camera, Mesh mesh, Texture texture) {
+    public void renderMesh(Vector3f position, Vector2f scale, Camera camera, Mesh mesh, Texture texture) {
         boolean textured = texture != null;
         Matrix4f model = new Matrix4f();
-        model.translate(position).scale(scale);
+        model.translate(position).scale(scale.x, scale.y, 1.0f);
 
         m_Shader.bind();
         m_Shader.setUniformMat4("u_MVPmatrix", new Matrix4f(camera.getCombinedMatrix()).mul(model));
