@@ -7,6 +7,7 @@ import git.arcane.core.graphics.cameras.OrthoCamera;
 import git.arcane.core.graphics.rendering.Sprite;
 import git.arcane.core.screen.Screen;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +18,7 @@ public class Game implements Screen {
     private Renderer render;
 
     private OrthoCamera camera;
-    private Sprite sprite;
+    private Sprite sprite, sprite2;
 
     @Override
     public void show() {
@@ -38,6 +39,10 @@ public class Game implements Screen {
         textures.putIfAbsent("dirt", dirt);
 
         sprite = new Sprite(textures.get("tiles"), 0, 0, 16, 16);
+        sprite2 = new Sprite(textures.get("tiles"), 16, 0, 16, 16);
+
+        sprite.setPosition(sprite.getPosition().x - 1.0f, sprite.getPosition().y);
+        sprite2.setPosition(sprite2.getPosition().x + 1.0f, sprite2.getPosition().y);
     }
 
     @Override
@@ -46,6 +51,7 @@ public class Game implements Screen {
             texture.dispose();
 
         sprite.dispose();
+        sprite2.dispose();
     }
 
     @Override
@@ -57,15 +63,19 @@ public class Game implements Screen {
     public void update(double dt) {
         camera.update();
 
-        Vector2f position = camera.getPosition();
-        position.x -= (float) dt * camera.getMoveSpeed();
+        //Vector2f position = camera.getPosition();
+        //position.x -= (float) dt * camera.getMoveSpeed();
+        //camera.setPosition(position);
 
-        camera.setPosition(position);
+        //Vector3f position = sprite.getPosition();
+        //position.x += (float) dt * 0.5f;
+        //sprite.setPosition(position.x, position.y);
     }
 
     @Override
     public void render(double alpha) {
         sprite.render(camera, render);
+        sprite2.render(camera, render);
     }
 
 }
