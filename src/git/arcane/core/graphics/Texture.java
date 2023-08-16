@@ -17,6 +17,9 @@ import static org.lwjgl.opengl.GL45.glCreateTextures;
 import static org.lwjgl.stb.STBImage.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 
+/**
+ * Loads an image into usable OpenGL information and helps us bind it so we can render it to the screen.
+ */
 public class Texture {
 
     private static class TextureData {

@@ -4,6 +4,9 @@ import git.arcane.core.LWJGLProject;
 import git.arcane.core.GameSettings;
 import git.arcane.game.RPGame;
 
+/**
+ * Entry-Point class.
+ */
 public class Main {
 
     public static void main(String[] args) {

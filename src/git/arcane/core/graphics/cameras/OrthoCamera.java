@@ -4,6 +4,10 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+/**
+ * A basic implementation of an Orthographic camera meant to render 2D scenes to a window. <br>
+ * There are likely more proper ways to implement this. To do that, extend {@link Camera}.
+ */
 public class OrthoCamera extends Camera {
 
     private final Vector2f m_Position;

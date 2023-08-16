@@ -10,6 +10,10 @@ import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL45.glCreateBuffers;
 import static org.lwjgl.opengl.GL45.glCreateVertexArrays;
 
+/**
+ * Basic sample implementation of the {@link IGame} interface.
+ * This game will be simple RPG.
+ */
 public class RPGame implements IGame {
     private static final String GAME_NAME = "RPG Project";
 
@@ -22,7 +26,6 @@ public class RPGame implements IGame {
 
         screens = new ScreenManager();
         screens.addScreen("Game", new Game());
-        screens.setActive("Game");
     }
 
     @Override

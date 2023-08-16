@@ -15,6 +15,10 @@ import java.util.Map;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 
+/**
+ * Reads shader data from shader paths we pass to it on creation.<br>
+ * Allows us to bind our shader program and set unique uniform variables per program.
+ */
 public class Shaders {
     private static class ShaderData {
         private final Map<Integer, String> m_ShaderPath;

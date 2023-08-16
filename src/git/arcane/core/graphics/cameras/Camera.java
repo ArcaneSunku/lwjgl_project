@@ -2,6 +2,10 @@ package git.arcane.core.graphics.cameras;
 
 import org.joml.Matrix4f;
 
+/**
+ * An abstract class that is meant to encapsulate the basic functionalities of any Camera.<br>
+ * This should, in theory, allow us to create all sorts of cameras by simply extending this class.
+ */
 public abstract class Camera {
     protected static class CameraData {
         public Matrix4f Combined;

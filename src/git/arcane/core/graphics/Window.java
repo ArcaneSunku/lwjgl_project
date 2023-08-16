@@ -1,6 +1,7 @@
 package git.arcane.core.graphics;
 
 import git.arcane.core.GameSettings;
+import git.arcane.core.util.Log;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.slf4j.Logger;
@@ -9,9 +10,10 @@ import org.slf4j.LoggerFactory;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+/**
+ * Handles everything needed to create and display a Window using LWJGL + OpenGL.
+ */
 public class Window {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(Window.class.getSimpleName());
 
     private static class WindowData {
         public long GLFWwindow = -1L;
@@ -69,7 +71,7 @@ public class Window {
 
         m_Data.GLFWwindow = glfwCreateWindow(width, height, title, NULL, NULL);
         if(m_Data.GLFWwindow == -1L || m_Data.GLFWwindow == NULL) {
-            LOGGER.error("Failed to create a Window!");
+            Log.CORE.error("Failed to create a Window!");
             throw new RuntimeException("Failed to create GLFWwindow!");
         }
 
@@ -97,6 +99,10 @@ public class Window {
             glfwDestroyWindow(m_Data.GLFWwindow);
             m_Data.GLFWwindow = -1L;
         }
+    }
+
+    public long getGLFWwindow() {
+        return m_Data.GLFWwindow;
     }
 
     public String getTitle() {

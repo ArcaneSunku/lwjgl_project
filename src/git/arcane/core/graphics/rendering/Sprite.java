@@ -6,6 +6,10 @@ import git.arcane.core.graphics.cameras.OrthoCamera;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+/**
+ * Handles a render-able Mesh with a Texture. This allows us to draw a texture super quick. <br>
+ * Sprite Sheet support is currently supported.
+ */
 public class Sprite {
 
     private static class SpriteData {

@@ -11,6 +11,10 @@ import org.joml.Vector3f;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
+/**
+ * A basic renderer that allows us to render things to the screen <br>
+ * in a "quick and dirty" manner. Will see lots of change.
+ */
 public class Renderer {
 
     private final Shaders m_Shader;

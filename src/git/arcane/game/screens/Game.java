@@ -6,12 +6,19 @@ import git.arcane.core.graphics.Texture;
 import git.arcane.core.graphics.cameras.OrthoCamera;
 import git.arcane.core.graphics.rendering.Sprite;
 import git.arcane.core.screen.Screen;
+import git.arcane.core.util.Input;
+import git.arcane.core.util.Log;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.lwjgl.glfw.GLFW.*;
+
+/**
+ * A simple implementation of a {@link Screen} that is meant to represent the Main Game.
+ */
 public class Game implements Screen {
 
     private Map<String, Texture> textures;
@@ -63,13 +70,38 @@ public class Game implements Screen {
     public void update(double dt) {
         camera.update();
 
-        //Vector2f position = camera.getPosition();
-        //position.x -= (float) dt * camera.getMoveSpeed();
-        //camera.setPosition(position);
+        if(Input.isMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT)) {
+            Log.GAME.info("Left Click!");
+        }
 
-        //Vector3f position = sprite.getPosition();
-        //position.x += (float) dt * 0.5f;
-        //sprite.setPosition(position.x, position.y);
+
+        Vector2f camPos = camera.getPosition();
+
+        if(Input.isKeyDown(GLFW_KEY_LEFT))
+            camPos.x -= (float) dt * camera.getMoveSpeed();
+        else if(Input.isKeyDown(GLFW_KEY_RIGHT))
+            camPos.x += (float) dt * camera.getMoveSpeed();
+
+        if(Input.isKeyDown(GLFW_KEY_UP))
+            camPos.y += (float) dt * camera.getMoveSpeed();
+        else if(Input.isKeyDown(GLFW_KEY_DOWN))
+            camPos.y -= (float) dt * camera.getMoveSpeed();
+
+        camera.setPosition(camPos);
+
+        Vector3f position = sprite.getPosition();
+
+        if(Input.isKeyDown(GLFW_KEY_A))
+            position.x -= (float) dt * 0.5f;
+        else if(Input.isKeyDown(GLFW_KEY_D))
+            position.x += (float) dt * 0.5f;
+
+        if(Input.isKeyDown(GLFW_KEY_W))
+            position.y += (float) dt * 0.5f;
+        else if(Input.isKeyDown(GLFW_KEY_S))
+            position.y -= (float) dt * 0.5f;
+
+        sprite.setPosition(position.x, position.y);
     }
 
     @Override

@@ -17,6 +17,10 @@ import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
 import static org.lwjgl.opengl.GL45.glCreateBuffers;
 import static org.lwjgl.opengl.GL45.glCreateVertexArrays;
 
+/**
+ * Handles the data needed for anything to be rendered to our screen.
+ * We use two sets of floats to create a valid mesh we'll eventually render.
+ */
 public class Mesh {
 
     private static class MeshData {

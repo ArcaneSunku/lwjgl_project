@@ -1,5 +1,6 @@
 package git.arcane.core;
 
+import git.arcane.core.util.Input;
 import git.arcane.core.util.Log;
 import git.arcane.core.graphics.Window;
 import org.lwjgl.BufferUtils;
@@ -58,7 +59,9 @@ public class LWJGLProject implements Runnable {
 
     private void gameLoop() {
         m_Window = new Window(m_Settings);
+        final Input input = new Input(m_Window);
 
+        input.initialize();
         m_Game.initialize();
         m_Window.show();
 
