@@ -46,28 +46,28 @@ tasks.register('run', JavaExec) {
 
 tasks.register('debug', JavaExec) {
     dependsOn classes
-    mainClass = project.mainClassName
+    mainClass = project.ext.mainClassName
     classpath = sourceSets.main.runtimeClasspath
     standardInput = System.in
-    workingDir = project.assetsDir
+    workingDir = project.ext.assetsDir
 
     ignoreExitValue = true as JavaExecSpec
     debug = true
 }
 
-tasks.register('dist', Jar)
-        {
-            dependsOn classes
-            duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
-            manifest {
-                attributes 'Main-Class' : project.mainClassName
-            }
-            dependsOn configurations.runtimeClasspath
-            from {
-                configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-            }
-            with jar
-        }
+tasks.register('dist', Jar) {
+    with jar
+    dependsOn classes
+    dependsOn configurations.runtimeClasspath
+
+    duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+    manifest {
+        attributes 'Main-Class' : project.ext.mainClassName
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
 
 group = "git.arcane.sunku"
 version = "0.0.1"

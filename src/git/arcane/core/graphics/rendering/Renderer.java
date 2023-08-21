@@ -18,9 +18,12 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 public class Renderer {
 
     private final Shaders m_Shader;
+    private Camera m_Camera;
 
-    public Renderer(Shaders shaders) {
+    public Renderer(Shaders shaders, Camera camera) {
         m_Shader = shaders;
+        m_Camera = camera;
+
         initialize();
     }
 
@@ -28,31 +31,45 @@ public class Renderer {
         m_Shader.createUniform("u_MVPmatrix");
         m_Shader.createUniform("u_Sampler");
         m_Shader.createUniform("u_Textured");
+
+        update();
+    }
+
+    public void update() {
+        m_Camera.update();
     }
 
     public void dispose() {
         m_Shader.dispose();
     }
 
-    public void renderMesh(Camera camera, Mesh mesh) {
-        renderMesh(new Vector3f(0.0f), new Vector2f(1.0f), camera, mesh);
+    public void setCamera(Camera camera) {
+        m_Camera = camera;
+        update();
+    }
+
+    public void renderMesh(Mesh mesh) {
+        renderMesh(new Vector3f(0.0f), new Vector2f(1.0f), mesh);
     }
 
     public void renderMesh(Camera camera, Mesh mesh, Texture texture) {
-        renderMesh(new Vector3f(0.0f), new Vector2f(1.0f), camera, mesh, texture);
+        renderMesh(new Vector3f(0.0f), new Vector2f(1.0f), mesh, texture);
     }
 
-    public void renderMesh(Vector3f position, Vector2f scale, Camera camera, Mesh mesh) {
-        renderMesh(position, scale, camera, mesh, null);
+    public void renderMesh(Vector3f position, Vector2f scale, Mesh mesh) {
+        renderMesh(position, scale, mesh, null);
     }
 
-    public void renderMesh(Vector3f position, Vector2f scale, Camera camera, Mesh mesh, Texture texture) {
+    public void renderMesh(Vector3f position, Vector2f scale, Mesh mesh, Texture texture) {
+        if(m_Shader == null || m_Camera == null)
+            return;
+
         boolean textured = texture != null;
         Matrix4f model = new Matrix4f();
         model.translate(position).scale(scale.x, scale.y, 1.0f);
 
         m_Shader.bind();
-        m_Shader.setUniformMat4("u_MVPmatrix", new Matrix4f(camera.getCombinedMatrix()).mul(model));
+        m_Shader.setUniformMat4("u_MVPmatrix", new Matrix4f(m_Camera.getCombinedMatrix()).mul(model));
 
         m_Shader.setUniformBool("u_Textured", textured);
         if(textured) {

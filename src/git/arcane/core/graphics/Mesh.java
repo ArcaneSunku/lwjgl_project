@@ -1,6 +1,5 @@
 package git.arcane.core.graphics;
 
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
 
@@ -24,52 +23,42 @@ import static org.lwjgl.opengl.GL45.glCreateVertexArrays;
 public class Mesh {
 
     private static class MeshData {
-        public int VAO, VBO, EBO;
+        public int vao = -1, vbo = -1, ebo = -1;
 
-        public float[] Vertices;
-        public int[] Indices;
+        public float[] vertices;
+        public int[] indices;
     }
 
     private final MeshData m_Data;
+    private boolean m_Loaded;
 
     public Mesh(float[] vertices, int[] indices) {
         m_Data = new MeshData();
+        m_Loaded = false;
 
-        m_Data.Vertices = vertices;
-        m_Data.Indices = indices;
+        m_Data.vertices = vertices;
+        m_Data.indices = indices;
 
-        load();
+        create();
     }
 
-    public void dispose() {
-        glDeleteVertexArrays(m_Data.VAO);
-        glDeleteBuffers(m_Data.VBO);
-        glDeleteBuffers(m_Data.EBO);
+    public void create() {
+        if(m_Loaded) {
+            dispose();
+            m_Loaded = false;
+        }
 
-        m_Data.Vertices = null;
-        m_Data.Indices = null;
-    }
-
-    public int getVAO() {
-        return m_Data.VAO;
-    }
-
-    public int getVertexCount() {
-        return m_Data.Indices.length;
-    }
-
-    private void load() {
         FloatBuffer vertexBuffer = null;
         IntBuffer indexBuffer = null;
         try {
-            m_Data.VAO = glCreateVertexArrays();
-            glBindVertexArray(m_Data.VAO);
+            m_Data.vao = glCreateVertexArrays();
+            glBindVertexArray(m_Data.vao);
 
-            m_Data.VBO = glCreateBuffers();
-            vertexBuffer = MemoryUtil.memAllocFloat(m_Data.Vertices.length);
-            vertexBuffer.put(0, m_Data.Vertices);
+            m_Data.vbo = glCreateBuffers();
+            vertexBuffer = MemoryUtil.memAllocFloat(m_Data.vertices.length);
+            vertexBuffer.put(0, m_Data.vertices);
 
-            glBindBuffer(GL_ARRAY_BUFFER, m_Data.VBO);
+            glBindBuffer(GL_ARRAY_BUFFER, m_Data.vbo);
             glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
 
             glEnableVertexAttribArray(0);
@@ -81,11 +70,11 @@ public class Mesh {
             glEnableVertexAttribArray(2);
             glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * Float.BYTES, 6 * Float.BYTES);
 
-            m_Data.EBO = glCreateBuffers();
-            indexBuffer = MemoryUtil.memAllocInt(m_Data.Indices.length);
-            indexBuffer.put(0, m_Data.Indices);
+            m_Data.ebo = glCreateBuffers();
+            indexBuffer = MemoryUtil.memAllocInt(m_Data.indices.length);
+            indexBuffer.put(0, m_Data.indices);
 
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Data.EBO);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Data.ebo);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL_STATIC_DRAW);
 
             glBindVertexArray(0);
@@ -95,7 +84,46 @@ public class Mesh {
 
             if(indexBuffer != null)
                 MemoryUtil.memFree(indexBuffer);
+
+            m_Loaded = true;
         }
+    }
+
+    public void dispose() {
+        glDeleteVertexArrays(m_Data.vao);
+        glDeleteBuffers(m_Data.vbo);
+        glDeleteBuffers(m_Data.ebo);
+
+        m_Data.vertices = null;
+        m_Data.indices = null;
+    }
+
+    public void setVertices(float[] vertices) {
+        m_Data.vertices = vertices;
+    }
+
+    public void setIndices(int[] indices) {
+        m_Data.indices = indices;
+    }
+
+    public boolean isLoaded() {
+        return m_Loaded;
+    }
+
+    public int getVAO() {
+        return m_Data.vao;
+    }
+
+    public int getVertexCount() {
+        return m_Data.indices.length;
+    }
+
+    public float[] getVertices() {
+        return m_Data.vertices;
+    }
+
+    public int[] getIndices() {
+        return m_Data.indices;
     }
 
     public static Mesh CreateMesh() {

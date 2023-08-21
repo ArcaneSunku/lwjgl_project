@@ -5,6 +5,7 @@ import org.joml.Vector2f;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -18,8 +19,8 @@ public class Input {
     public Input(Window window) {
         m_WindowHandle = window.getGLFWwindow();
 
-        m_KeyMap = new LinkedHashMap<>();
-        m_MouseButtonMap = new LinkedHashMap<>();
+        m_KeyMap = new ConcurrentHashMap<>();
+        m_MouseButtonMap = new ConcurrentHashMap<>();
 
         m_MousePos = new Vector2f(0.0f, 0.0f);
         m_MouseDelta = new Vector2f(0.0f, 0.0f);
@@ -28,7 +29,7 @@ public class Input {
             ms_Instance = this;
     }
 
-    public void initialize() {
+    public synchronized void initialize() {
         for(int i = GLFW_KEY_SPACE; i < GLFW_KEY_LAST; i++)
             m_KeyMap.put(i, false);
 
