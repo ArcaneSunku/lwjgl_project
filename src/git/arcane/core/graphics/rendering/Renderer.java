@@ -9,6 +9,9 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL14.GL_FUNC_ADD;
+import static org.lwjgl.opengl.GL14.glBlendFuncSeparate;
+import static org.lwjgl.opengl.GL20.glBlendEquationSeparate;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 /**
@@ -28,6 +31,11 @@ public class Renderer {
     }
 
     private void initialize() {
+        glEnable(GL_DEPTH_TEST);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
         m_Shader.createUniform("u_MVPmatrix");
         m_Shader.createUniform("u_Sampler");
         m_Shader.createUniform("u_Textured");

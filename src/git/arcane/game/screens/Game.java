@@ -6,15 +6,12 @@ import git.arcane.core.graphics.Texture;
 import git.arcane.core.graphics.cameras.OrthoCamera;
 import git.arcane.core.graphics.rendering.Sprite;
 import git.arcane.core.graphics.rendering.SpriteSheet;
+import git.arcane.core.graphics.rendering.font.RenderFont;
 import git.arcane.core.screen.Screen;
-import git.arcane.core.util.Input;
 import org.joml.Vector3f;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
 /**
  * A simple implementation of a {@link Screen} that is meant to represent the Main Game.
@@ -27,12 +24,15 @@ public class Game implements Screen {
     private OrthoCamera camera;
     private SpriteSheet tileSheet;
     private Sprite sprite, sprite2;
+    private RenderFont font;
 
     @Override
     public void show() {
         final Shaders shaders = new Shaders("/shaders/scene.vert", "/shaders/scene.frag");
-        final Texture tiles = new Texture("/textures/tiles.png");
-        final Texture dirt = new Texture("/textures/dirt.png");
+        final Texture tiles = Texture.loadTexture("/textures/tiles.png");
+        final Texture dirt = Texture.loadTexture("/textures/dirt.png");
+
+        font = new RenderFont("/fonts/vcr.ttf", 16);
 
         camera = new OrthoCamera(16, 9);
         camera.setMoveSpeed(0.5f);
@@ -52,15 +52,17 @@ public class Game implements Screen {
 
         sprite.setPosition(sprite.getPosition().x - 1.0f, sprite.getPosition().y);
         sprite2.setPosition(sprite2.getPosition().x + 1.0f, sprite2.getPosition().y);
+
+        camera.setZoom(0.2f);
     }
 
     @Override
     public void hide() {
-        for(Texture texture : textures.values())
-            texture.dispose();
-
         sprite.dispose();
         sprite2.dispose();
+
+        for(Texture texture : textures.values())
+            texture.delete();
     }
 
     @Override
@@ -71,15 +73,12 @@ public class Game implements Screen {
     @Override
     public void update(double dt) {
         render.update();
-
-        if(Input.isKeyDown(GLFW_KEY_SPACE))
-            sprite.setTint(new Vector3f(0.1f, 0.3f, 0.7f));
-        else if(Input.isKeyDown(GLFW_KEY_ESCAPE))
-            sprite.setTint(new Vector3f(1.0f));
     }
 
     @Override
     public void render(double alpha) {
+        font.drawText(render, "Hello, World! 123", 0, 0, 0.25f);
+
         sprite.draw(render);
         sprite2.draw(render);
     }

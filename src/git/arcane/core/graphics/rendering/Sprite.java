@@ -25,6 +25,7 @@ public class Sprite {
     private final SpriteData m_Data;
     private final Vector3f m_Position;
     private final Vector2f m_Size;
+    private float m_Layer;
 
     public Sprite(Texture texture, Mesh mesh, Vector3f tint) {
         m_Data = new SpriteData(texture);
@@ -33,6 +34,7 @@ public class Sprite {
 
         m_Position = new Vector3f(0.0f);
         m_Size = new Vector2f(1.0f);
+        m_Layer = 0.0f;
     }
 
     public Sprite(Texture texture, Vector3f tint, int x, int y, int width, int height) {
@@ -41,6 +43,7 @@ public class Sprite {
 
         m_Position = new Vector3f(x, y, 0.0f);
         m_Size = new Vector2f(width, height);
+        m_Layer = 0.0f;
 
         init();
     }
@@ -120,6 +123,10 @@ public class Sprite {
         m_Size.set(xSize, ySize);
     }
 
+    public void setLayer(float layer) {
+        m_Layer = layer;
+    }
+
     public void setTint(Vector3f color) {
         m_Data.tint.set(color);
         reloadTint();
@@ -135,6 +142,10 @@ public class Sprite {
 
     public Vector2f getSize() {
         return m_Size;
+    }
+
+    public float getLayer() {
+        return m_Layer;
     }
 
     public Vector3f getTint() {
