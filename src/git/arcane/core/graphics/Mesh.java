@@ -11,8 +11,7 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import static org.lwjgl.opengl.GL30.glDeleteVertexArrays;
+import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL45.glCreateBuffers;
 import static org.lwjgl.opengl.GL45.glCreateVertexArrays;
 
@@ -51,10 +50,10 @@ public class Mesh {
         FloatBuffer vertexBuffer = null;
         IntBuffer indexBuffer = null;
         try {
-            m_Data.vao = glCreateVertexArrays();
+            m_Data.vao = glGenVertexArrays();
             glBindVertexArray(m_Data.vao);
 
-            m_Data.vbo = glCreateBuffers();
+            m_Data.vbo = glGenBuffers();
             vertexBuffer = MemoryUtil.memAllocFloat(m_Data.vertices.length);
             vertexBuffer.put(0, m_Data.vertices);
 
@@ -70,7 +69,7 @@ public class Mesh {
             glEnableVertexAttribArray(2);
             glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * Float.BYTES, 6 * Float.BYTES);
 
-            m_Data.ebo = glCreateBuffers();
+            m_Data.ebo = glGenBuffers();
             indexBuffer = MemoryUtil.memAllocInt(m_Data.indices.length);
             indexBuffer.put(0, m_Data.indices);
 

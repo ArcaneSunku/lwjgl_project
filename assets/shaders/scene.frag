@@ -3,8 +3,8 @@
 in vec3 v_Color;
 in vec2 v_TexCoords;
 
-uniform sampler2D u_Sampler;
 uniform int u_Textured;
+uniform sampler2D u_Sampler;
 
 out vec4 o_Color;
 

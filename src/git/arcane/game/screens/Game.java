@@ -77,10 +77,10 @@ public class Game implements Screen {
 
     @Override
     public void render(double alpha) {
-        font.drawText(render, "Hello, World! 123", 0, 0, 0.25f);
-
         sprite.draw(render);
         sprite2.draw(render);
+
+        font.drawText(render, "Hello, World! 123", 0, 0, 0.25f);
     }
 
 }

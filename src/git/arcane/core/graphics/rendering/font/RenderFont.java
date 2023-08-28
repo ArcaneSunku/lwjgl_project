@@ -15,11 +15,11 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import static java.awt.Font.*;
+import static org.lwjgl.opengl.GL11.*;
 
 public class RenderFont {
 
@@ -83,6 +83,7 @@ public class RenderFont {
             drawY += textHeight - m_FontHeight;
 
         m_Texture.bind();
+        glDisable(GL_DEPTH_TEST);
         for(int i = 0; i < text.length(); i++) {
             char ch = text.charAt(i);
             if (ch == '\n') {
@@ -102,6 +103,7 @@ public class RenderFont {
             cha.dispose();
             drawX += g.width * padding;
         }
+        glEnable(GL_DEPTH_TEST);
     }
 
     public void drawText(Renderer renderer, CharSequence text, float x, float y, float padding) {
